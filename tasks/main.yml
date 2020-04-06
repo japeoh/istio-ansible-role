@@ -1,0 +1,40 @@
+---
+# tasks file for japeoh.istio
+
+- name: Create directorys
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+  - "{{ istio_base_dir }}"
+  - "{{ istio_install_dir }}"
+  - "{{ istio_download_dir }}"
+
+- name: Download istio
+  get_url:
+    url: "{{ istio_download_url }}"
+    dest: "{{ istio_download_dir }}"
+    checksum: "{{ istio_checksum }}"
+
+- name: Extract istio
+  unarchive:
+    src: "{{ istio_downloaded_archive }}"
+    dest: "{{ istio_download_dir }}"
+    extra_opts: --strip-components=1
+    creates: "{{ istioctl_binary }}"
+
+- name: Install istioctl
+  file:
+    src: "{{ istioctl_binary }}"
+    dest: "{{ istioctl_installation }}"
+    state: link
+    force: yes
+
+- name: Execute istioctl version
+  command: "{{ istioctl_installation }} version --remote=false"
+  register: version
+  changed_when: false
+
+- name: Validate correct istioctl installed
+  assert:
+    that: istio_version in version.stdout

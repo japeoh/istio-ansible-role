@@ -1,0 +1,12 @@
+---
+# vars file for japeoh.istio
+
+istio_base_url: https://github.com/istio/istio/releases/download
+istio_archive: "istio-{{ istio_version }}-linux.tar.gz"
+
+istio_download_dir: "{{ istio_base_dir }}/istio-{{ istio_version }}"
+istio_download_url: "{{ istio_base_url }}/{{ istio_version }}/{{ istio_archive }}"
+istio_downloaded_archive: "{{ istio_download_dir }}/{{ istio_archive }}"
+
+istioctl_binary: "{{ istio_download_dir }}/bin/istioctl"
+istioctl_installation: "{{ istio_install_dir }}/istioctl"
